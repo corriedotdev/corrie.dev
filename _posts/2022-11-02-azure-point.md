@@ -1,10 +1,11 @@
 ---
 layout: post
-title: Download - Point Cloud Realtime Player & Clothing Demo
+title: Point Cloud Realtime Player & Clothing Demo
 excerpt: "The application streams the azure kinect once ran as admin using vfx graph. Its effect is voxel with volumetric lighting in real time. Allowing for camera to be panned around viewing the subject in full 360. Just a tech demo, similar to brain dance from cyberpunk. Also shared a small demo I made for changing clothing using the kinect. Simple but may give insight."
 categories: [Download🔻]
 comments: true 
-
+image:
+  feature: feature/3.jpg
 ---
 
 # Point Cloud
