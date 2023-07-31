@@ -35,11 +35,11 @@ kramdown:
 owner:
   name: Corrie Dev Blog
   avatar: logo-loop.mp4 #logo.PNG
-  job: "XR Research."
+  job: "VR Research & Development."
   bio: "Interested in Design, Unity, C#, UX & literally anything." #"This is my page on the internet." Interested in Design, Unity, C#, UX & literally anything.
   email:
   disqus-shortname: #corrie-dev
-  twitter: corriedotdev
+  twitter: #corriedotdev
   facebook: #username
   google:
     plus: #username
