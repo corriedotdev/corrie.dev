@@ -18,7 +18,7 @@ galleries:
      - { url: '/img/modular/yove.gif', alt: '3'}
  3:
    -
-     - { url: '/img/modular/new.png', alt: '4'}
+     - { url: '/img/modular/new.PNG', alt: '4'}
 ---
 
 ## Intro
