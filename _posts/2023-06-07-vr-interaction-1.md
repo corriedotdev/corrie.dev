@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Modular 3D Interfaces for Accessible VR Applications
+title: "Modular 3D Interfaces for Accessible VR Applications"
 excerpt: "Published in Springer Nature VR Book, im going to go over the main points of the framework Ive developed so you can create a UI that supports an accessible first design approach while also supporting multimodal input, future proofing your UI for all input mediums."
 modified: 2013-05-31
 categories: [Publication📕,VR🥽]
