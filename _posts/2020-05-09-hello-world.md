@@ -4,6 +4,8 @@ title: Hosting a Jekyll blog with no database
 excerpt: "This website is hosted without a back end. Imagine developing numerous static HTML pages such as header, content and footer elements and then stitching them together to get the page you see now. A static site generator builds a website once, then delivers the pages as static pages with no server side processing. From a high level, its doing a find and replace on key values.."
 categories: [code👨‍💻]
 comments: true
+image:
+  feature: feature/14.jpg
 ---
 # How this site was created
 

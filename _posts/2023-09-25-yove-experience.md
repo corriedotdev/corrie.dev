@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "Your Own Virtual Environment, Experience 3D GUI"
+title: "Experience 3D VR Interaction - YOVE (Your Own Virtual Environment)"
 excerpt: "Download the PC and Quest Standalone experience of YOVE. A very small single world experience that showcases some VR experiments completed during the PhD. Launch a rocket too."
 modified: 2013-05-31
 categories: [VR🥽]
 comments: true
 pinned: true
 image:
-  feature: feature/11.jpg
+  feature: feature/13.jpg
 galleries:
  1:
    -
@@ -20,15 +20,19 @@ A short video player with a blur effect for the screen. The Slider is a placehol
 
 > Its an offline application in both builds.  
 
+<video id="videoElement" width="720" height="480" playsinline autoplay muted loop>
+      <source src="{{ site.url }}/img/yove-vr.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+</video>
 ### PC Steam VR 
 Download the PC VR Compatable experience below.
 
-<div markdown="0"><a href="{{ site.url }}/releases/Kinect_Realtime_Voxel.7z" class="btn btn-success" download >Download PCVR</a></div>
+<div markdown="0"><a href="https://drive.google.com/file/d/12H8ig6VHB-xfK5jMU2KUZYuKxU-UOFOu/view?usp=sharing" class="btn btn-success" download >Download PCVR</a></div>
 
 ### Quest APK 
 Download the Quest Pro and Quest 2 compatable .apk. Ensure you have download from trusted sources enabled. 
 
-<div markdown="0"><a href="{{ site.url }}/releases/Kinect_Realtime_Voxel.7z" class="btn btn-success" download >Download Quest</a></div>
+<div markdown="0"><a href="https://drive.google.com/file/d/1a3d-kjpbjUMr74AmUbnhwgbjU7NUtXv4/view?usp=sharing" class="btn btn-success" download >Download Quest</a></div>
 
 
 {% include gallery.html  gallery=1 %}
