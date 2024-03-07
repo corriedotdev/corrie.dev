@@ -1,11 +1,9 @@
 ---
 layout: post
-title: "Experience 3D VR Interaction - YOVE (Your Own Virtual Environment)"
-excerpt: "Download the PC and Quest Standalone experience of YOVE. A very small single world experience that showcases some VR experiments completed during the PhD. Launch a rocket too."
-modified: 2013-05-31
-categories: [VR🥽]
+title: "Download & Experience the VR Interface here"
+excerpt: "Download the PC and Quest Standalone experience of YOVE. A very small single world experience that showcases some VR experiments completed during the PhD. Launch a rocket too. Your Own Virtual Environment"
+categories: [VR🥽, Download🔻]
 comments: true
-pinned: true
 image:
   feature: feature/13.jpg
 galleries:
@@ -36,7 +34,6 @@ Download the Quest Pro and Quest 2 compatable .apk. Ensure you have download fro
 
 
 {% include gallery.html  gallery=1 %}
-
 
 
 ## Further Reading
