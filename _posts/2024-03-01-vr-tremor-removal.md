@@ -12,8 +12,8 @@ galleries:
      - { url: '/img/filter/filter.PNG', alt: 'vr filter'}
  2:
    -
-     - { url: '/img/filter/VR.png', alt: 'vr filter'}
-     - { url: '/img/filter/capture.png', alt: 'vr filter'}     
+     - { url: '/img/filter/vr.png', alt: 'vr filter'}
+     - { url: '/img/filter/Capture.png', alt: 'vr filter'}     
  3:
    -
      - { url: '/img/filter/noise.gif', alt: 'vr filter'}
