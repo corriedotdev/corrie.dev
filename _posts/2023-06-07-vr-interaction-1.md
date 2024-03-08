@@ -36,7 +36,7 @@ Existing interfaces are not, if ever, designed with accessibility in mind. It's 
 - Predictable task-focused interactions, using skeuomorphs and colors around 3D interface trims in designated context zones
 
 ## Demo Download 
-The [Github repo](https://github.com/corriedotdev/vr-modular-3d-gui_) you can download various demonstrations of the application. You can integrate this into your project by creating a panel with a border that allows for grabbable interactions. The 
+The [Github repo](https://github.com/corriedotdev/vr-modular-3d-gui) you can download various demonstrations of the application. You can integrate this into your project by creating a panel with a border that allows for grabbable interactions. The 
 
 {% include gallery.html  gallery=3 %}
 
