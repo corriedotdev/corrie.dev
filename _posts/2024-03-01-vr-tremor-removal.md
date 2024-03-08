@@ -12,7 +12,7 @@ galleries:
      - { url: '/img/filter/filter.PNG', alt: 'vr filter'}
  2:
    -
-     - { url: '/img/filter/VR Ergonomic Safe Zone v3 water.PNG', alt: 'vr filter'}
+     - { url: '/img/filter/VR.PNG', alt: 'vr filter'}
      - { url: '/img/filter/capture.PNG', alt: 'vr filter'}     
  3:
    -
@@ -79,7 +79,7 @@ In summary, the t-test proves significance for 10m button, 5m slider and 10m sli
 ## Improve Your Item Placement in VR
 I will make another post here soon for this as there is a lot to break down but as I am disclosing this research in pre-print format for now and awaiting Journal publication, this graphic can be used to help with item placement in VR. All demos include this so you can experience it first hand.
 {% include gallery.html  gallery=2 %}
-<div markdown="0"><a href="" class="btn btn-success" download >Download Graphic</a></div>
+<div markdown="0"><a href="https://corrie.dev/img/filter/vr.png" class="btn btn-success" download >Download Graphic</a></div>
 **Minimum Comfort Angle** = (HMD FoV/2)+30 
 {: .notice}
 
