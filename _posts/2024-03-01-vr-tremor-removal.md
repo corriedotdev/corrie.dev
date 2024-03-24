@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "We can Remove Tremors in VR using the 1-Euro-Filter"
-excerpt: "One core component discovered during my PhD for the best part of 3 years. Review process is killing me so have decided to share the science now and wait on journal publication. We CAN remove tremors in VR. I want every VR system to have this as an option in Meta / Valve / Pico Accessibility Settings."
+excerpt: "I want to see this filter integrated into every VR HMD Accessibility Menu with a Toggle. It’s just a single script.. One core component discovered during my PhD for the best part of 3 years. Review process is killing me so have decided to share the science now and wait on journal publication. We CAN remove tremors in VR. I want every VR system to have this as an option in Meta / Valve / Pico Accessibility Settings."
 categories: [VR🥽,Publication📕, Download🔻]
 comments: true
 image:
@@ -28,11 +28,13 @@ galleries:
 {: .pull-center}
 > I want to see this filter integrated into every VR HMD Accessibility Menu with a Toggle. It's just a single script.
 
-**Pre-Print** Paper available [here]()
+Paper pending Publication at my preferred journal which is Springer Nature Virtual Reality
+**Pre-Print** Paper available [here]()          
 
+**Git Study Repo** Paper available [here](https://github.com/corriedotdev/vr-tremor-reduction)      
 
 ## Intro
-All of us have begning essential tremors, you may notice these shakes in VR when you are selecting an item in a menu using a laser pointer. Some tremors are exaggerated due to the tracking of controllers or hand tracking techniques when using vision. These can be system signal noise or, essential tremors. Between the range of 4-12Hz we have psychotic tremors (sometimes refferred to as essential tremors). Some tremors have a high frequency but a low amplitude resulting in them barely being noticable. Unlike parkinsons tremors where the high amplitude often makes them much more obvious. 
+All of us have benign essential tremors, you may notice these shakes in VR when you are selecting an item in a menu using a laser pointer. Some tremors are exaggerated due to the tracking of controllers or hand tracking techniques when using vision. These can be system signal noise or, essential tremors. Between the range of 4-12Hz we have psychotic tremors (sometimes refferred to as essential tremors). Some tremors have a high frequency but a low amplitude resulting in them barely being noticable. Unlike parkinsons tremors where the high amplitude often makes them much more obvious. 
 
 In VR selecting UI components, often at a distance, we neglect to take these tremors into consideration. 
 
