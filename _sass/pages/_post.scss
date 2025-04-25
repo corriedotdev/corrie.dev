@@ -161,7 +161,7 @@ a.read-more {
 
 .announcement-banner {
   width: 100%;
-  height: 40px; /* Increased height for better visibility */
+  height: 30px; /* Increased height for better visibility */
   background-color: #EA2E99;
   color: white;
   font-size: 16px;
@@ -174,13 +174,13 @@ a.read-more {
   justify-content: center;
   align-items: center;
   text-align: center;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
   animation: slideDown 0.5s ease-out; /* Smooth entrance animation */
 }
 
 .announcement-banner a {
   text-decoration: none;
-  padding: 10px 20px;
+  padding: 10px 25px;
   border-radius: 5px;
   transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
 }
