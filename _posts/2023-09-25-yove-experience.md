@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Download & Experience the VR Interface here"
+title: "Download & Experience the 3D VR Interface here"
 excerpt: "Download the PC and Quest Standalone experience of YOVE. A very small single world experience that showcases some VR experiments completed during the PhD. Launch a rocket too. Your Own Virtual Environment"
 categories: [VR🥽, Download🔻]
 comments: true
