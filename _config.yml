@@ -9,6 +9,8 @@ description: Corrie.dev blog.
 url: "https://corrie.dev" # the base hostname & protocol for your site
 keywords: ["corrie blog", "corrie dev", "virtual reality ui design", "vr 3d interface", "VR blog", "corrie dev blog", "corrie green", "developer", "vr interface design", "virtual reality interfaces", "unity", "c#", "tutorials", "vr", "virtual reality", "xr", "virtual reality developer", "corrie phd"]
 
+
+
 #
 ###################################
 # Jekyll configuration
