@@ -2,21 +2,64 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Three.js Head Tracking with Idle</title>
+<title>Three.js Head Tracking with Video + SSAO + Overlay</title>
 <style>
-body { margin:0; background:#111; }
-#viewer { width:150px; height:150px; display:block; margin:0 auto; }
+body { margin:0; background:#111; overflow:hidden; }
+
+/* Video background */
+#videoContainer {
+  position: absolute;
+  top: 0; left: 0;
+  width: 150px; height: 150px;
+  z-index: 0;
+  overflow: hidden;
+}
+#videoElement {
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+
+/* Three.js canvas */
+#viewer {
+  position: absolute;
+  top: 0; left: 0;
+  width: 150px; height: 150px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* PNG overlay border */
+#overlayBorder {
+  position: absolute;
+  top: 0; left: 0;
+  width: 150px; height: 150px;
+  z-index: 2;             /* On top of video and canvas */
+  pointer-events: none;   /* So it doesn't block mouse input */
+}
 </style>
 </head>
 <body>
 
+<div id="videoContainer">
+  <video id="videoElement" playsinline autoplay muted loop>
+    <source src="new.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+</div>
+
 <div id="viewer"></div>
+
+<!-- PNG overlay -->
+<img id="overlayBorder" src="border.PNG" />
 
 <script type="importmap">
 {
   "imports": {
     "three": "https://cdn.jsdelivr.net/npm/three@0.159.0/build/three.module.js",
-    "three/examples/jsm/loaders/GLTFLoader.js": "https://cdn.jsdelivr.net/npm/three@0.159.0/examples/jsm/loaders/GLTFLoader.js"
+    "three/examples/jsm/loaders/GLTFLoader.js": "https://cdn.jsdelivr.net/npm/three@0.159.0/examples/jsm/loaders/GLTFLoader.js",
+    "three/examples/jsm/postprocessing/EffectComposer.js": "https://cdn.jsdelivr.net/npm/three@0.159.0/examples/jsm/postprocessing/EffectComposer.js",
+    "three/examples/jsm/postprocessing/RenderPass.js": "https://cdn.jsdelivr.net/npm/three@0.159.0/examples/jsm/postprocessing/RenderPass.js",
+    "three/examples/jsm/postprocessing/SSAOPass.js": "https://cdn.jsdelivr.net/npm/three@0.159.0/examples/jsm/postprocessing/SSAOPass.js"
   }
 }
 </script>
@@ -24,119 +67,101 @@ body { margin:0; background:#111; }
 <script type="module">
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
+import { SSAOPass } from 'three/examples/jsm/postprocessing/SSAOPass.js';
 
 const container = document.getElementById("viewer");
-const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true });
 renderer.setSize(container.clientWidth, container.clientHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
 container.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
-
-// Camera
-const camera = new THREE.PerspectiveCamera(
-  45,
-  container.clientWidth / container.clientHeight,
-  0.1,
-  100
-);
+const camera = new THREE.PerspectiveCamera(45, container.clientWidth/container.clientHeight, 0.1, 100);
 
 // Lights
-const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+const directionalLight = new THREE.DirectionalLight(0xffffff, 0.6); 
 directionalLight.position.set(3,5,2);
 scene.add(directionalLight);
-scene.add(new THREE.AmbientLight(0xffffff, 0.7));
+scene.add(new THREE.AmbientLight(0xffffff, 1));
+scene.add(new THREE.HemisphereLight(0xffffff, 0x444444, 1));
 
-// Load GLB
+// Post-processing
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+const ssaoPass = new SSAOPass(scene, camera, container.clientWidth, container.clientHeight);
+ssaoPass.kernelRadius = 1;
+ssaoPass.minDistance = 0.001;
+ssaoPass.maxDistance = 0.03;
+composer.addPass(ssaoPass);
+
+// Mouse tracking
+let mouse = new THREE.Vector2(0,0);
+document.addEventListener('mousemove', e => {
+  mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+});
+
+// Load model
 const loader = new GLTFLoader();
 let model, headBone, mixer;
-let mouse = new THREE.Vector2(0,0);
 
-loader.load('./IdleLowPoly.glb', gltf => {
+loader.load('./IdleLowPoly2.glb', gltf => {
     model = gltf.scene;
+    model.traverse(c => {
+      if(c.isMesh)
+        c.material = new THREE.MeshStandardMaterial({ color:0xffffff, roughness:0.7, metalness:0 });
+    });
 
-    // White material
-    model.traverse(c => { if(c.isMesh) c.material = new THREE.MeshStandardMaterial({color:0xffffff}) });
-
-    // Scale model
     const box = new THREE.Box3().setFromObject(model);
     const size = new THREE.Vector3();
     box.getSize(size);
-    const scaleFactor = 6 / size.y;
-    model.scale.setScalar(scaleFactor);
+    model.scale.setScalar(6 / size.y);
 
     scene.add(model);
 
-    // Camera positioning
-    const topY = 19;
-    const frontZ = 6.5;
-    camera.position.set(0, topY - 0.3, frontZ);
+    const topY = 27.5;
+    const frontZ = 10;
+    camera.position.set(0, topY-0.3, frontZ);
     camera.lookAt(0, topY, 0);
 
-    // Find head bone
     headBone = model.getObjectByName("LowManHead");
     if(!headBone) console.warn("Head bone/mesh not found!");
 
-    // --- Debug log animations ---
-    if(gltf.animations && gltf.animations.length > 0){
-        console.log(`Found ${gltf.animations.length} animation(s) in this GLB:`);
-        gltf.animations.forEach((clip, i) => {
-            console.log(`${i}: Name="${clip.name}", Duration=${clip.duration.toFixed(2)}s`);
-        });
-
-        // Setup idle animation
+    if(gltf.animations && gltf.animations.length>0){
         mixer = new THREE.AnimationMixer(model);
         const idleAction = mixer.clipAction(gltf.animations[0]);
         idleAction.play();
-    } else {
-        console.log("No animations found in this GLB.");
+        console.log(`Playing animation: ${gltf.animations[0].name}`);
     }
 
 }, xhr => console.log(`Loading: ${(xhr.loaded/xhr.total*100).toFixed(0)}%`),
 err => console.error('Error loading GLB:', err)
 );
 
-
-// Track mouse
-document.addEventListener('mousemove', e => {
-  mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
-});
-
-// Animation loop
 const clock = new THREE.Clock();
+
 function animate() {
-  const delta = clock.getDelta();
+    const delta = clock.getDelta();
+    if(mixer) mixer.update(delta);
 
-  // Update idle animation
-  if(mixer) mixer.update(delta);
+    if(headBone){
+        const MOUSE_MULTIPLIER = 20;
+        const target = new THREE.Vector3(mouse.x*MOUSE_MULTIPLIER, mouse.y*MOUSE_MULTIPLIER, 0.5);
+        target.unproject(camera);
 
-if(headBone){
-    const MOUSE_MULTIPLIER = 20;
-    // Compute target position in world space
-    const target = new THREE.Vector3(
-        mouse.x * MOUSE_MULTIPLIER,
-        mouse.y * MOUSE_MULTIPLIER,
-        0.5
-    );
-    target.unproject(camera);
+        const quat = new THREE.Quaternion();
+        headBone.lookAt(target);
+        quat.copy(headBone.quaternion);
+        headBone.quaternion.slerp(quat, 0.1);
+    }
 
-    // Compute quaternion that looks at the target
-    const quat = new THREE.Quaternion();
-    headBone.lookAt(target);
-    quat.copy(headBone.quaternion);
-
-    // Smoothly slerp from current rotation to target
-    headBone.quaternion.slerp(quat, 0.1); // 0.1 = smooth factor
-}
-
-
-  renderer.render(scene, camera);
-  requestAnimationFrame(animate);
+    composer.render();
+    requestAnimationFrame(animate);
 }
 
 animate();
-
 </script>
 
 </body>
