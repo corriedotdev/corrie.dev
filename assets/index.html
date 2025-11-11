@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Three.js Head Tracking with Idle</title>
+<style>
+body { margin:0; background:#111; }
+#viewer { width:150px; height:150px; display:block; margin:0 auto; }
+</style>
+</head>
+<body>
+
+<div id="viewer"></div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.159.0/build/three.module.js",
+    "three/examples/jsm/loaders/GLTFLoader.js": "https://cdn.jsdelivr.net/npm/three@0.159.0/examples/jsm/loaders/GLTFLoader.js"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+
+const container = document.getElementById("viewer");
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setSize(container.clientWidth, container.clientHeight);
+renderer.setPixelRatio(window.devicePixelRatio);
+container.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+
+// Camera
+const camera = new THREE.PerspectiveCamera(
+  45,
+  container.clientWidth / container.clientHeight,
+  0.1,
+  100
+);
+
+// Lights
+const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+directionalLight.position.set(3,5,2);
+scene.add(directionalLight);
+scene.add(new THREE.AmbientLight(0xffffff, 0.7));
+
+// Load GLB
+const loader = new GLTFLoader();
+let model, headBone, mixer;
+let mouse = new THREE.Vector2(0,0);
+
+loader.load('./IdleLowPoly.glb', gltf => {
+    model = gltf.scene;
+
+    // White material
+    model.traverse(c => { if(c.isMesh) c.material = new THREE.MeshStandardMaterial({color:0xffffff}) });
+
+    // Scale model
+    const box = new THREE.Box3().setFromObject(model);
+    const size = new THREE.Vector3();
+    box.getSize(size);
+    const scaleFactor = 6 / size.y;
+    model.scale.setScalar(scaleFactor);
+
+    scene.add(model);
+
+    // Camera positioning
+    const topY = 19;
+    const frontZ = 6.5;
+    camera.position.set(0, topY - 0.3, frontZ);
+    camera.lookAt(0, topY, 0);
+
+    // Find head bone
+    headBone = model.getObjectByName("LowManHead");
+    if(!headBone) console.warn("Head bone/mesh not found!");
+
+    // --- Debug log animations ---
+    if(gltf.animations && gltf.animations.length > 0){
+        console.log(`Found ${gltf.animations.length} animation(s) in this GLB:`);
+        gltf.animations.forEach((clip, i) => {
+            console.log(`${i}: Name="${clip.name}", Duration=${clip.duration.toFixed(2)}s`);
+        });
+
+        // Setup idle animation
+        mixer = new THREE.AnimationMixer(model);
+        const idleAction = mixer.clipAction(gltf.animations[0]);
+        idleAction.play();
+    } else {
+        console.log("No animations found in this GLB.");
+    }
+
+}, xhr => console.log(`Loading: ${(xhr.loaded/xhr.total*100).toFixed(0)}%`),
+err => console.error('Error loading GLB:', err)
+);
+
+
+// Track mouse
+document.addEventListener('mousemove', e => {
+  mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+});
+
+// Animation loop
+const clock = new THREE.Clock();
+function animate() {
+  const delta = clock.getDelta();
+
+  // Update idle animation
+  if(mixer) mixer.update(delta);
+
+if(headBone){
+    const MOUSE_MULTIPLIER = 20;
+    // Compute target position in world space
+    const target = new THREE.Vector3(
+        mouse.x * MOUSE_MULTIPLIER,
+        mouse.y * MOUSE_MULTIPLIER,
+        0.5
+    );
+    target.unproject(camera);
+
+    // Compute quaternion that looks at the target
+    const quat = new THREE.Quaternion();
+    headBone.lookAt(target);
+    quat.copy(headBone.quaternion);
+
+    // Smoothly slerp from current rotation to target
+    headBone.quaternion.slerp(quat, 0.1); // 0.1 = smooth factor
+}
+
+
+  renderer.render(scene, camera);
+  requestAnimationFrame(animate);
+}
+
+animate();
+
+</script>
+
+</body>
+</html>

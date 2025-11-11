@@ -14,7 +14,7 @@ In 2021 I was experimenting with rendering a real-time playback from the Azure K
 
 Each frame stored 3D positions directly in RGBA channels — one pixel per point — and the sequence played back in real time inside Unity (with some bit shifting) At the time, it was a simple way to avoid complex streaming from the containerized `.mkv` format and make point cloud playback easier to handle through a single image. Again to clarify, this was to allow a point cloud captured from a Lidar scanner to position recorded points into a bitmap EXR image. Each row of the bitmap were all the positions and the next row the next for the time buffer. Resulting in interpolation just like a frame animation approach but as its points there are no edges or sides to deform. 
 
-What I didn’t realize then was that this same approach closely mirrors the standard in **Vertex Animation Textures (VAT)** and **data-oriented pipelines** such as **DOTS**. The key component of the research was trying to serialize point cloud recordings in a resource effective way that
+What I didn’t realize then was that this same approach closely mirrors the standard in **Vertex Animation Textures (VAT)** and **data-oriented pipelines** such as **DOTS**. The key component of the research was trying to serialize point cloud recordings in a resource effective way that12356
 
 1) Could potentially lean into computer vision for AI analysis in the future as more and more areas of the real world become digital twinned, such as object detection from a point cloud scan but use the bitmap vs renderer
 
