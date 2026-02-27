@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Pixel Arcade VR - Demo Oct 14th Steam Next Fest"
+title: "Pixel Arcade™  VR - Demo Oct 14th Steam Next Fest"
 excerpt: "Written for gamedeveloper.com. From the technical potential and immpressive array of worlds at this years VRKet, quality of VR development frameworks and new research into VR interfaces helping guide player expectations, the recent annoucement of future HMDs from Meta and Google comes as no suprise.."
 categories: [VR🥽]
 comments: true

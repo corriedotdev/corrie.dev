@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Pixel Arcade and Find Poly
+title: Pixel Arcade™  and Find Poly™ 
 excerpt: "Pixel Arcade was released in 2016 and I have been looking at making a multiplayer sequel for some time now and my love for casual mobile games has now resulted in the IP I previously mentioned called Find Poly! Check out some development previews inside."
 categories: [VR🥽]
 comments: true 
