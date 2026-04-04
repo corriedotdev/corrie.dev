@@ -3,14 +3,18 @@
 <div class="cover-card table-cell table-middle">
   {% if author.avatar %}
   <a href="{{ site.url }}/">
-    <!-- <video src="{{ site.url }}/img/{{ author.avatar }}" poster="{{ site.url }}/img/logo.PNG" width="150px" height="150px" controls preload></video> -->
-    
-    <video id="videoElement" width="150" height="150" playsinline autoplay muted loop>
-      <source src="{{ site.url }}/img/{{ author.avatar }}" type="video/mp4">
-      Your browser does not support the video tag.
-   </video>
-    
-    <!-- <img src="{{ site.url }}/img/logo.PNG" alt="" class="avatar"> -->
+    <div id="avatar-container">
+      <!-- Desktop bg: falling cubes, sits behind 3D character -->
+      <video id="bgVideo" playsinline autoplay muted loop preload="auto">
+        <source src="/assets/new.mp4" type="video/mp4">
+      </video>
+      <!-- Mobile fallback: pre-rendered character idle -->
+      <video id="videoElement" playsinline autoplay muted loop>
+        <source src="{{ site.url }}/img/{{ author.avatar }}" type="video/mp4">
+      </video>
+      <div id="viewer"></div>
+      <img id="overlayBorder" src="/assets/border.png" alt="" />
+    </div>
   </a>
   {% endif %}
   <a href="{{ site.url }}/" class="author_name">{{ author.name }}</a>
@@ -46,15 +50,117 @@
   </nav>
   {% include social-links.html %}
 </div>
-<script>
-  window.addEventListener('load', function(){
-    var newVideo = document.getElementById('videoElement');
-    newVideo.addEventListener('ended', function() {
-        this.currentTime = 0;
-        this.play();
-    }, false);
+<script type="module">
+  const isMobile = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
 
-    newVideo.play();
+  if (!isMobile) {
+    const viewer  = document.getElementById('viewer');
+    const video   = document.getElementById('videoElement');
+    const bgVideo = document.getElementById('bgVideo');
+    const border  = document.getElementById('overlayBorder');
 
-});
+    const wait = ms => new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), ms));
+
+    const fallback = () => {
+      bgVideo.style.display = 'none';
+      viewer.style.display  = 'none';
+      border.style.display  = 'none';
+      video.style.display   = 'block';
+      video.play().catch(() => {});
+    };
+
+    try {
+      // Show bg video immediately, hide fallback
+      video.style.display   = 'none';
+      bgVideo.style.display = 'block';
+      bgVideo.play().catch(() => {});
+
+      // Confirm bg video can play within 5s
+      await Promise.race([
+        new Promise((resolve, reject) => {
+          if (bgVideo.readyState >= 3) { resolve(); return; }
+          bgVideo.addEventListener('canplay', resolve, { once: true });
+          bgVideo.addEventListener('error',   reject,  { once: true });
+        }),
+        wait(5000)
+      ]);
+
+      // Load Three.js within 10s
+      const THREE          = await Promise.race([import('three'), wait(10000)]);
+      const { GLTFLoader } = await Promise.race([import('three/examples/jsm/loaders/GLTFLoader.js'), wait(10000)]);
+
+      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setSize(150, 150);
+      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setClearColor(0x000000, 0);
+      viewer.appendChild(renderer.domElement);
+
+      const scene  = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+
+      const dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
+      dirLight.position.set(3, 5, 2);
+      scene.add(dirLight);
+      scene.add(new THREE.AmbientLight(0xffffff, 1));
+      scene.add(new THREE.HemisphereLight(0xffffff, 0x444444, 1));
+
+      const mouse = new THREE.Vector2(0, 0);
+      document.addEventListener('mousemove', e => {
+        mouse.x =  (e.clientX / window.innerWidth)  * 2 - 1;
+        mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+      });
+
+      const loader = new GLTFLoader();
+      let headBone, mixer;
+
+      // Load GLB within 15s
+      await Promise.race([
+        new Promise((resolve, reject) => {
+          loader.load('/assets/IdleLowPoly2.glb', gltf => {
+            const model = gltf.scene;
+            model.traverse(c => {
+              if (c.isMesh)
+                c.material = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.7, metalness: 0 });
+            });
+            const box  = new THREE.Box3().setFromObject(model);
+            const size = new THREE.Vector3();
+            box.getSize(size);
+            model.scale.setScalar(6 / size.y);
+            scene.add(model);
+            camera.position.set(0, 27.2, 10);
+            camera.lookAt(0, 27.5, 0);
+            headBone = model.getObjectByName('LowManHead');
+            if (gltf.animations.length > 0) {
+              mixer = new THREE.AnimationMixer(model);
+              mixer.clipAction(gltf.animations[0]).play();
+            }
+            resolve();
+          }, undefined, reject);
+        }),
+        wait(15000)
+      ]);
+
+      // Show 3D canvas + border once model is confirmed loaded
+      viewer.style.display = 'block';
+      border.style.display = 'block';
+
+      const clock = new THREE.Clock();
+      (function animate() {
+        requestAnimationFrame(animate);
+        const delta = clock.getDelta();
+        if (mixer) mixer.update(delta);
+        if (headBone) {
+          const target = new THREE.Vector3(mouse.x * 20, mouse.y * 20, 0.5);
+          target.unproject(camera);
+          headBone.lookAt(target);
+          headBone.rotateY(-Math.PI / 2);
+        }
+        renderer.render(scene, camera);
+      })();
+
+    } catch (err) {
+      console.warn('Avatar 3D failed, using pre-rendered fallback:', err.message);
+      fallback();
+    }
+  }
 </script>
