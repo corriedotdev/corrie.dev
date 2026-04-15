@@ -17,6 +17,11 @@
     </div>
   </a>
   {% endif %}
+  <div id="ao-debug" style="display:none;">
+    ambient: <span id="ao-val">1.00</span>
+    <input type="range" id="ao-slider" min="0" max="2" step="0.05" value="1"
+      oninput="window._ambientIntensity=parseFloat(this.value);document.getElementById('ao-val').textContent=parseFloat(this.value).toFixed(2);">
+  </div>
   <a href="{{ site.url }}/" class="author_name">{{ author.name }}</a>
   <span class="author_job">{{ author.job }}</span>
   <span class="author_bio mbm">{{ author.bio }}</span>
@@ -52,8 +57,9 @@
 </div>
 <script type="module">
   const isMobile = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+  const isNarrow = window.matchMedia('(max-width: 992px)').matches;
 
-  if (!isMobile) {
+  if (!isMobile && !isNarrow) {
     const viewer  = document.getElementById('viewer');
     const video   = document.getElementById('videoElement');
     const bgVideo = document.getElementById('bgVideo');
@@ -101,7 +107,8 @@
       const dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
       dirLight.position.set(3, 5, 2);
       scene.add(dirLight);
-      scene.add(new THREE.AmbientLight(0xffffff, 1));
+      const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+      scene.add(ambientLight);
       scene.add(new THREE.HemisphereLight(0xffffff, 0x444444, 1));
 
       const mouse = new THREE.Vector2(0, 0);
@@ -109,6 +116,8 @@
         mouse.x =  (e.clientX / window.innerWidth)  * 2 - 1;
         mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
       });
+
+      const topLayoutMQ = window.matchMedia('(max-width: 992px)');
 
       const loader = new GLTFLoader();
       let headBone, mixer;
@@ -148,12 +157,23 @@
       (function animate() {
         requestAnimationFrame(animate);
         const delta = clock.getDelta();
+        if (window._ambientIntensity !== undefined) ambientLight.intensity = window._ambientIntensity;
         if (mixer) mixer.update(delta);
         if (headBone) {
-          const target = new THREE.Vector3(mouse.x * 20, mouse.y * 20, 0.5);
+          let tx, ty;
+          if (topLayoutMQ.matches) {
+            // Avatar at top — look down toward content, track left/right
+            tx = mouse.x * 20;
+            ty = -6 + mouse.y * 4;
+          } else {
+            // Avatar on left — full cursor tracking
+            tx = mouse.x * 20;
+            ty = mouse.y * 20;
+          }
+          const target = new THREE.Vector3(tx, ty, 0.5);
           target.unproject(camera);
           headBone.lookAt(target);
-          headBone.rotateY(-Math.PI / 2);
+          headBone.rotateY(0.35);
         }
         renderer.render(scene, camera);
       })();
