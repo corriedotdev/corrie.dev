@@ -99,17 +99,21 @@
       renderer.setSize(150, 150);
       renderer.setPixelRatio(window.devicePixelRatio);
       renderer.setClearColor(0x000000, 0);
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       viewer.appendChild(renderer.domElement);
 
       const scene  = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
 
-      const dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
+      const dirLight = new THREE.DirectionalLight(0xffffff, 1.4);
       dirLight.position.set(3, 5, 2);
+      dirLight.castShadow = true;
+      dirLight.shadow.mapSize.set(512, 512);
       scene.add(dirLight);
-      const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
       scene.add(ambientLight);
-      scene.add(new THREE.HemisphereLight(0xffffff, 0x444444, 1));
+      scene.add(new THREE.HemisphereLight(0xffffff, 0x222222, 0.6));
 
       const mouse = new THREE.Vector2(0, 0);
       document.addEventListener('mousemove', e => {
@@ -128,8 +132,11 @@
           loader.load('/assets/IdleLowPoly2.glb', gltf => {
             const model = gltf.scene;
             model.traverse(c => {
-              if (c.isMesh)
-                c.material = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.7, metalness: 0 });
+              if (c.isMesh) {
+                c.material = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.8, metalness: 0 });
+                c.castShadow = true;
+                c.receiveShadow = true;
+              }
             });
             const box  = new THREE.Box3().setFromObject(model);
             const size = new THREE.Vector3();
