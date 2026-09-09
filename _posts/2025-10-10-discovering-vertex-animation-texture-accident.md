@@ -1,12 +1,16 @@
 ---
 layout: post
-title: 3D Animation - Point-Cloud Playback & Vertex Animation
-excerpt: "A 2021 prototype that encoded Kinect point clouds into EXR frames — unknowingly reflecting more data-oriented vertex animation and DOTS pipelines now seen." add in compute shader
+title: Point-Cloud Animation & Vertex Animation
+excerpt: "A 2021 prototype that encoded Kinect point clouds into EXR frames — unknowingly reflecting more data-oriented vertex animation and DOTS pipelines now seen." # add in compute shader
 categories: [Tech💡]
 comments: true
 image:
   feature: feature/11.jpg
 ---
+
+# Pre-note
+It is aparetnly clear that guassian splats allow for video to be used for training data to generate spatial 3D playback now as of 2026. The below write up is merely a fun learning process I encountered whilst using Lidar. Lidar has its benefits in industry, multimodal sensor fusions for more accurate depth estimation but there is more. 
+I ran through a tutorial recently showcasing how to process humanoid animations into VAT for use with Unity. For future reference, it would be interesting to consider recording real world actors with a 4K camera, pre-process frames and create true 3D guassian splat character animation for playback in engine, allowing for a hyper realisitc representation of game characters. Photogrammetry is critical in AAA development, but natural movement sells it.
 
 # Coincidence with Point-Cloud Playback and Vertex Animation
 
@@ -47,7 +51,7 @@ What started as a practical workaround for Kinect data ended up being a small-sc
 
 Back in my research I explored how 3D LiDAR and depth data could be stored and replayed using image formats, specifically **EXR**. The idea was simple: treat each pixel as a vector in space.  
 
-3D LiDAR recordings offer a degree of anonymity — the raw points of data themselves don’t reveal a person until processed into world space. By storing these points as **bitmap-based EXR images**, playback could be achieved directly in game engines like Unity or Unreal, rather than relying on proprietary point cloud players.  
+3D LiDAR recordings offer a degree of anonymity — the raw points of data themselves don’t reveal a person until processed into world space. By storing these points as **bitmap-based EXR images**, playback could be achieved directly in game engines like Unity or Unreal, rather than relying on proprietary point cloud players whilst never being able to visually identify a person.  
 
 Each pixel encoded **XYZ positions** into **RGB channels**, creating a lightweight serialisation format for 3D space. A 16-bit or 32-bit EXR maintained precision while staying lossless. During playback, these images were deserialized and rendered through a custom **particle system** using VFX graph, reconstructing the original point cloud in real time.
 
@@ -87,7 +91,15 @@ The portal in pixel arcade was hastidly done using mesh vertices interpolation u
 
 ## Vertex Shaders
 
-## Computer Shader
+
+## Further Reading
+Check out the following links for inspiration and further reading about this topic
+* [Pre-Print VR Tremor Reduction](https://arxiv.org/abs/2405.07335)
+* [VR Tremor Reduction GitHub Repo](https://github.com/corriedotdev/vr-tremor-reduction)
+* [3D Modular Interface Paper](https://link.springer.com/chapter/10.1007/978-3-031-35634-6_2)
+* [3D Modular Interface GitHub Repo](https://github.com/corriedotdev/vr-modular-3d-gui)
+
+
 
 ---
 

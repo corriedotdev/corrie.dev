@@ -1,9 +1,8 @@
 ---
 layout: post
-title: "PhD Summary | Optimizing for Holistic VR Interaction"
-excerpt: "Three years of doctoral research distilled into key actionable takeaways for VR UI designers, accessibility advocates, current VR Developers and HMD manufacturers."
+title: "Optimizing for Holistic VR Interaction"
+excerpt: "Three years of doctoral research distilled into key actionable takeaways for VR UI designers, accessibility advocates, current VR Developers and anyone writing OS layer accessibility features for VR. Tldr: Start making interfaces forgiving, not static in one place where physical adjustment is needed."
 categories: [VR🥽,Publication📕]
-comments: true
 image:
   feature: feature/11.jpg
 galleries:

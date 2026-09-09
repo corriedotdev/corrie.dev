@@ -149,6 +149,12 @@ a.read-more {
 }
 
 .post-image-feature {
+  .rounded-thumbnail {
+    width: 180px;
+    height: 151px;
+    object-fit: cover;
+    border-radius: 20px;
+  }
   /*margin-bottom: 40px;*/
   float:left;
   width: 200px;
